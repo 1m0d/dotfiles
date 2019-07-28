@@ -17,7 +17,7 @@
 ZSH_THEME="spaceship"
 
 SPACESHIP_TIME_SHOW=true
-SPACESHIP_RUBY_SYMBOL='ruby '
+# SPACESHIP_RUBY_SYMBOL='ruby '
 SPACESHIP_PROMPT_ADD_NEWLINE=false
 
 #. /home/domi/.local/lib/python3.5/site-packages/powerline/bindings/zsh/powerline.zsh
@@ -140,24 +140,8 @@ bindkey -v
 bindkey "^[Od" backward-word
 bindkey "^[Oc" forward-word
 
-
-alias l='ls -lh --color=auto'
-alias ls='ls -lh --color=auto'
-alias lsh='ls -alh --color=auto'
-alias i3config='vim ~/.config/i3/config'
-alias cleartmp='sudo rm -r /tmp/*'
-alias cpf='xsel -b <'
-alias ping='ping www.google.com'
-alias install='sudo apt install'
-alias us='setxkbmap us'
-alias hu='setxkbmap hu'
-alias r='rails'
-alias g='git'
-alias virpay='cd ~/shinrai/virpay-bot'
-alias homepage='gvim ~/Documents/homepage'
-alias mrcoin='~/shinrai/mrcoin'
-alias v='viewnior'
-alias findp='apt-file search'
+# import aliases
+source "$ZSH_CUSTOM/aliases"
 
 export PATH="$HOME/.rbenv/bin:$PATH"
 eval "$(rbenv init - zsh)"
@@ -199,3 +183,8 @@ function chpwd() {
     emulate -L zsh
     ls
 }
+
+# wait 10ms instead of 40 when pressing escape to switch to normal mode
+export KEYTIMEOUT=1
+export XDG_CURRENT_DESKTOP=i3
+export TERM=xterm-256color
