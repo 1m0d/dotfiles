@@ -1,3 +1,14 @@
+color Tomorrow-Night-1mod
+
+autocmd User Rails let b:surround_{char2nr('-')} = "<% \r %>" " displays <% %> correctly
+
+:set cpoptions+=$ " puts a $ marker for the end of words/lines in cw/c$ commands
+
+let g:UltiSnipsExpandTrigger="<c-tab>"
+let g:UltiSnipsListSnippets="<c-s-tab>"
+let g:UltiSnipsJumpForwardTrigger="<c-b>"
+let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+
 " map <F8> :w <CR> :!gcc % -o %< && ./%< <CR>
 
 autocmd filetype cpp map <C-c> :!g++ -std=c++11 % -Wall -g -o %.out && ./%.out<CR>
