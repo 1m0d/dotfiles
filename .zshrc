@@ -2,7 +2,7 @@
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-  export ZSH="/home/domi/.oh-my-zsh"
+  export ZSH="/Users/domi/.oh-my-zsh"
 
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
@@ -17,7 +17,6 @@
 ZSH_THEME="spaceship"
 
 SPACESHIP_TIME_SHOW=true
-SPACESHIP_RUBY_SYMBOL='ruby '
 SPACESHIP_PROMPT_ADD_NEWLINE=false
 
 #. /home/domi/.local/lib/python3.5/site-packages/powerline/bindings/zsh/powerline.zsh
@@ -74,19 +73,22 @@ HYPHEN_INSENSITIVE="true"
 plugins=(
   git
   extract
-  rails
   vi-mode
-  zsh-autosuggestions
+  rails
 )
 
 source $ZSH/oh-my-zsh.sh
 
 # zsh-syntax-highlighting plugin
-source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 ZSH_HIGHLIGHT_STYLES[suffix-alias]=fg=yellow,underline
 ZSH_HIGHLIGHT_STYLES[precommand]=fg=yellow,underline
 ZSH_HIGHLIGHT_STYLES[arg0]=fg=yellow,bold
+
+# load autosuggestions
+source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=247'
 
 # User configuration
 
@@ -137,27 +139,25 @@ unsetopt beep
 bindkey -v
 # End of lines configured by zsh-newuser-install
 #
-bindkey "^[Od" backward-word
-bindkey "^[Oc" forward-word
+bindkey "^[[H" backward-word
+bindkey "^[[F" forward-word
 
 
-alias l='ls -lh --color=auto'
-alias ls='ls -lh --color=auto'
-alias lsh='ls -alh --color=auto'
-alias i3config='vim ~/.config/i3/config'
+alias l='ls -lh'
+alias ls='ls -lh -G'
+alias lsh='ls -alh'
 alias cleartmp='sudo rm -r /tmp/*'
 alias cpf='xsel -b <'
-alias ping='ping www.google.com'
-alias install='sudo apt install'
-alias us='setxkbmap us'
-alias hu='setxkbmap hu'
+alias pingg='ping www.google.com'
 alias r='rails'
 alias g='git'
 alias virpay='cd ~/shinrai/virpay-bot'
 alias homepage='gvim ~/Documents/homepage'
 alias mrcoin='~/shinrai/mrcoin'
-alias v='viewnior'
-alias findp='apt-file search'
+alias tree='tree -C'
+# neovim in da house
+alias vim='nvim'
+alias gvim='vimr'
 
 export PATH="$HOME/.rbenv/bin:$PATH"
 eval "$(rbenv init - zsh)"
@@ -183,10 +183,6 @@ eval "$(rbenv init - zsh)"
     #fi
 #}
 
-#export NVM_DIR="$HOME/.nvm"
-#[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-#[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
 autoload -U +X bashcompinit && bashcompinit
 complete -o nospace -C /opt/vault vault
 
@@ -199,3 +195,10 @@ function chpwd() {
     emulate -L zsh
     ls
 }
+
+# NVM
+export NVM_DIR="$HOME/.nvm"
+  [ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
+  [ -s "/usr/local/opt/nvm/etc/bash_completion" ] && . "/usr/local/opt/nvm/etc/bash_completion"  # This loads nvm bash_completion
+export PATH="/usr/local/opt/libiconv/bin:$PATH"
+export PATH="/usr/local/opt/libiconv/bin:$PATH"
