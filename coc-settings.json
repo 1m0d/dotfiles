@@ -1,0 +1,13 @@
+{
+  "solargraph.diagnostics": true,
+  "solargraph.completion": true,
+  "solargraph.hover": true,
+  "solargraph.autoformat": true,
+  "solargraph.references": true,
+  "solargraph.formatting": true,
+  "solargraph.symbols": true,
+  "solargraph.folding":  true,
+
+  "tsserver.tsdk": ".yarn/sdks/typescript/lib",
+  "tsserver.npm": "/usr/local/bin/npm"
+}
