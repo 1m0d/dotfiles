@@ -1,5 +1,7 @@
-color Tomorrow-Night
-set guifont=Source\ Code\ Pro\ for\ Powerline\ Regular\ 10
+color Tomorrow-Night-Domi
+set macligatures
+set guifont=Fira\ Code:h12
+
 set guioptions-=T " Removes top toolbar
 set guioptions-=r " Removes right hand scroll bar
 set guioptions-=m " Removes menu
