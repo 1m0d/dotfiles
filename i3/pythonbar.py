@@ -11,7 +11,9 @@ status = Status(logfile='/home/domi/i3pystatus.log')
     # format = ('%a %b %-d %X', 'Europe/Budapest'),)
 
 status.register("clock",
-    format = ('%a %b %-d %X', 'Europe/Budapest'),)
+                on_leftclick = ["brave-browser http://calendar.google.com"],
+                on_rightclick = ["brave-browser https://todoist.com/app/"],
+                format = ('%a %b %-d %X', 'Europe/Budapest'),)
 
 # Shows the average load of the last minute and the last 5 minutes
 # (the default value for format is used)
@@ -46,7 +48,8 @@ status.register("disk",
 # Shows pulseaudio default sink volume
 #
 # Note: requires libpulseaudio from PyPI
-status.register("pulseaudio")
+status.register("pulseaudio",
+                format = "♪: {volume} {volume_bar}",)
 
 # Weather
 #status.register("weather",
@@ -68,45 +71,27 @@ status.register("pulseaudio")
    # ),
 #)
 
+status.register("xkblayout")
 # Shows your CPU temperature, if you have a Intel CPU
 status.register("temp",
-    format="{temp:.0f}°C",)
+                format="{temp:.0f}°C",)
 
 # CPU usage
 status.register("cpu_usage",
-    format = "{usage}%",)
+                format = "{usage}%",)
 
 # Memory usage
 status.register("mem",
         color = "#ffbf00",)
 
-status.register("coin",
-        format = "{symbol} {price}{status}{percent_change_24h}%",
-        coin = "bitcoin",)
-
-status.register("coin",
-        format = "{symbol} {price}{status}{percent_change_24h}%",
-        interval = 200,)
-
-status.register("coin",
-        format = "{symbol} {price}{status}{percent_change_24h}%",
-        symbol = "ɱ",
-        coin = "monero",
-        interval = 200,)
-
-status.register("coin",
-        format = "{symbol} {price}{status}{percent_change_24h}%",
-        symbol = "BAT",
-        coin = "basic-attention-token",
-        interval = 200,)
-
 status.register("scratchpad")
 
 #battery
 status.register("battery",
-    format="{status} {remaining:%E%hh:%Mm}",
+                format="{status} {remaining:%E%hh:%Mm} \[{consumption:.2f} Watts\]",
     alert=True,
     alert_percentage=5,
+    alert_timeout=5,
     status={
         "DIS":  "Discharging",
         "CHR":  "Charging",

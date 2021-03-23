@@ -47,9 +47,13 @@ new_float pixel 1
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
 
-# keepass always floating
+# always floating windows
 for_window [class="KeePass2"] floating enable
-for_window [class="keepassxc"] floating enable
+for_window [class="KeePassXC"] floating enable
+for_window [title="Microsoft Teams Notification"] floating enable
+
+# authy
+for_window [instance="crx_gaedmjdfmmahhbjefcbgaolhhanlaolb"] floating enable
 
 # quick terminal
 # exec --no-startup-id urxvt -name metask
@@ -57,16 +61,19 @@ for_window [class="keepassxc"] floating enable
 # for_window [instance="metask"] move scratchpad; [instance="metask"] scratchpad show; move position 0px 22px; resize shrink height 100px; resize grow width 954px; move scratchpad
 # bindsym $mod+t [instance="metask"] scratchpad show
 
-bindsym $mod+Return exec urxvt
-bindsym $mod+c exec firefox
+# bindsym $mod+Return exec urxvt
+bindsym $mod+Return exec kitty
+bindsym $mod+c exec brave-browser
+
 
 #rofi menu
 # bindsym $mod+d exec rofi -modi drun -show drun
 # bindsym $mod+d exec rofi -combi-modi window,drun -modi combi -show combi &> /home/domi/rofi.log
-bindsym $mod+Shift+d exec rofi -show run
+# bindsym $mod+Shift+d exec rofi -show run
 # bindsym $mod+Shift+x exec rofi -show window
-bindsym Mod4+space exec rofi -show window
+# bindsym Mod4+space exec rofi -show window
 # bindsym $mod+d exec rofi -combi-modi window,drun -show combi -modi combi
+# bindsym $mod+d exec rofi -combi-modi window#drun#run -show combi
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -225,6 +232,7 @@ default_orientation horizontal
 # Startup
 #exec --no-startup-id xflux -l 47.5 -g 19
 #exec --no-startup-id feh --bg-fill ~/Downloads/wallpapers/1501557853407-2.jpg
+exec --no-startup-id xidlelock
 exec --no-startup-id compton --config .config/compton.conf
 exec --no-startup-id nitrogen --restore
 exec --no-startup-id xrdb ~/.Xresources
@@ -235,7 +243,8 @@ exec --no-startup-id nm-applet
 #exec --no-startup-id xset -b
 exec --no-startup-id setxkbmap -option caps:none
 exec --no-startup-id blueman-applet
-exec --no-startup-id fluxgui
+# exec --no-startup-id fluxgui
+exec --no-startup-id redshift -t 6500:3000 -l 47.497913:19.040236
 # TODO move these to a file
 exec --no-startup-id xinput --set-prop "SynPS/2 Synaptics TouchPad" "Synaptics Scrolling Distance" -99 -99
 exec --no-startup-id xinput --set-prop "Synaptics TM2722-001" "Synaptics Scrolling Distance" -99 -99
@@ -245,8 +254,8 @@ exec --no-startup-id synclient TapButton3=2
 exec --no-startup-id synclient ClickButton3=2
 exec --no-startup-id synclient ClickFinger3=2
 # exec --no-startup-id xmodmap ~/.Xmodmap
-exec --no-startup-id bash ~/scripts/monitor-hotplug.sh
-exec --no-startup-id export XDG_CURRENT_DESKTOP=i3 && pia-client
+exec --no-startup-id /usr/local/bin/monitor-hotplug
+# exec --no-startup-id export XDG_CURRENT_DESKTOP=i3 && pia-client
 
 #i3pybar
 bar {
@@ -254,7 +263,7 @@ bar {
   position          top
   workspace_buttons yes
   font pango: ttf-font-awesome 10
-  tray_output primary
+  # tray_output primary
 
  colors {
     background #1D2426
@@ -268,6 +277,25 @@ bar {
   }
 }
 
+# bar {
+  # status_command    python3 ~/.config/i3/coin_pythonbar.py
+  # mode              hide
+  # position          bottom
+  # workspace_buttons no
+  # font pango: ttf-font-awesome 10
+  # tray_output none
+
+ # colors {
+    # background #1D2426
+    # statusline #ffbf00
+    # separator #666666
+
+    # focused_workspace  #ffbf00 #ffbf00 #34314c
+    # active_workspace   #34314c #34314c #ffffff
+    # inactive_workspace #ff7473 #ff7473 #34314c
+    # urgent_workspace   #2f343a #900000 #ffffff
+  # }
+# }
 
 # Disable Titlebars
 #for_window [class="^.*"] border pixel 0

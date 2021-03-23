@@ -9,5 +9,23 @@
   "solargraph.folding":  true,
 
   "tsserver.tsdk": ".yarn/sdks/typescript/lib",
-  "tsserver.npm": "/usr/local/bin/npm"
+  "tsserver.npm": "/usr/local/bin/npm",
+
+  "python.jediEnabled": true,
+
+  "languageserver": {
+     "ccls": {
+       "command": "ccls",
+       "filetypes": ["c", "cpp", "cuda", "objc", "objcpp"],
+       "rootPatterns": [".ccls-root", "compile_commands.json"],
+       "initializationOptions": {
+         "cache": {
+           "directory": ".ccls-cache"
+         },
+         "client": {
+           "snippetSupport": true
+         }
+       }
+     }
+   }
 }

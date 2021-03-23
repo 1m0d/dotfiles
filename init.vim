@@ -27,19 +27,29 @@ Plug 'neoclide/coc.nvim', { 'branch': 'release' }
 Plug 'jeetsukumaran/vim-buffergator'
 Plug 'ConradIrwin/vim-bracketed-paste'
 Plug 'majutsushi/tagbar'
+Plug 'chriskempson/base16-vim'
+Plug 'honza/vim-snippets'
+" Plug 'gennaro-tedesco/nvim-peekup'
+Plug 'liuchengxu/vim-which-key'
 
 " Initialize plugin system
 call plug#end()
 
 " ------End of Plugins-----
-"
+
 "  -----CoC Extensions-----
 let g:coc_global_extensions = [
   \'coc-json',
   \'coc-tsserver',
   \'coc-snippets',
   \'coc-solargraph',
+  \'coc-html',
+  \'coc-css',
+  \'coc-omnisharp',
+  \'coc-python',
   \]
+  " \'coc-diagnostic'
+  " \'coc-jedi',
 " ----------END-----------
 
 "---------Settings---------
@@ -50,15 +60,15 @@ let g:coc_global_extensions = [
 " endif
 
 " set leader to Space
-nnoremap <SPACE> <Nop>
-let mapleader = " "
+let g:mapleader = "\<Space>"
 
 set number relativenumber         " hybrid line numbers
 set ruler                         " Show line and column number
 syntax enable                     " syntax highlighting
 
 set mouse=a                       " scroll with mouse
-set guicursor+=a:blinkon1         " turn on cursor blinking
+set guicursor+=a:blinkon500       " turn on cursor blinking
+set cursorline
 
 set hidden                        " Buffer will be hidden if trying to open new file whilst changes aren't saved
 
@@ -75,7 +85,9 @@ set listchars=""                  " Reset the listchars
 set listchars=tab:\ \             " a tab should display as "  ", trailing whitespace as "."
 set listchars+=trail:.            " show trailing spaces as dots
 
-""
+set autoread                      " auto-reload file on change
+
+
 "" Searching
 ""
 set hlsearch    " highlight matches
@@ -87,6 +99,13 @@ set backspace=indent,eol,start " backspace through everything in insert mode
 
 set updatetime=300
 
+"" make @ keyword for scss
+autocmd FileType scss setl iskeyword+=@-@
+
+filetype plugin on " load the plugin files for specific file types
+
+set foldmethod=syntax
+set foldlevelstart=20
 " ------End of Setings-----
 
 "-----Plugin Settings------
@@ -103,7 +122,17 @@ if (executable('ag'))
     let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore .git -g ""'
 endif
 
+" gnvim breaks with popup window
+" let g:fzf_layout = { 'down': '40%' }
+
+let g:coc_node_path = '/home/domi/.nvm/versions/node/v14.13.1/bin/node'
+
+let g:which_key_map = {}
+call which_key#register('<Space>', "g:which_key_map")
+
+let g:python3_host_prog = '/home/domi/.pyenv/versions/3.8.0/bin/python'
 " ------End of Setings-----
+
 
 " -----Keybinds-------
 "
@@ -124,12 +153,17 @@ endfunction
 
 " map <silent> <Leader>n :NERDTreeToggle<CR>
 " open nerdtree with viewing current buffer
-map <silent> <Leader>n :call NerdTreeSmartOpen()<CR>
-map <silent> <Leader>f :Ag<CR>
-
+nnoremap <silent> <Leader>n :call NerdTreeSmartOpen()<CR>
+nnoremap <silent> <Leader>f :Ag<CR>
+nnoremap <silent> <Leader>/ :Lines<CR>
 nnoremap <silent> <C-p> :Files<CR>
 nnoremap <silent> <C-x> :Commands<CR>
+nnoremap <silent> <leader> :<c-u>WhichKey '<Space>'<CR>
+nnoremap <silent> <ESC> :noh<CR>
 
+nmap <Leader>p 0D"0p
+
+vnoremap <C-Y> "+y
 
 " ----End of Keybinds-----
 
@@ -139,18 +173,22 @@ command! NvimrcReload :source ~/.config/nvim/init.vim
 " ---------End----------
 
 " ---Appearance---
+
 set termguicolors
 set background=dark " for the dark version
 " set background=light " for the light version
 let g:one_allow_italics = 1 "italics for comments
 colorscheme one
 let g:airline_theme='one'
+set guifont=Fira\ Code\ Retina:h9
 
 let comment_color='8e8e8e'
 call one#highlight('Comment', comment_color, '', 'italic')
 call one#highlight('vimLineComment', comment_color, '', 'italic')
 call one#highlight('Todo', 'FFFFFF', '', 'bold')
 call one#highlight('vimCommentTitle', 'FFFFFF', '', 'bold') " capital plus + at the start of comment
+
+" call one#highlight('Normal', 'D3D5D3,', '1D1E1F', '')
 
 " --------COC settings--------------
 " Don't pass messages to |ins-completion-menu|.
@@ -178,6 +216,9 @@ function! s:check_back_space() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
+
+imap <C-l> <Plug>(coc-snippets-expand)
+
 
 " Use <c-space> to trigger completion.
 " inoremap <silent><expr> <c-space> coc#refresh()
@@ -273,18 +314,18 @@ set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 
 " Mappings for CoCList
 " Show all diagnostics.
-nnoremap <silent><nowait> <space>a  :<C-u>CocList diagnostics<cr>
-" Manage extensions.
-nnoremap <silent><nowait> <space>e  :<C-u>CocList extensions<cr>
-" Show commands.
-nnoremap <silent><nowait> <space>c  :<C-u>CocList commands<cr>
-" Find symbol of current document.
-nnoremap <silent><nowait> <space>o  :<C-u>CocList outline<cr>
-" Search workspace symbols.
-nnoremap <silent><nowait> <space>s  :<C-u>CocList -I symbols<cr>
-" Do default action for next item.
-nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
-" Do default action for previous item.
-nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
-" Resume latest coc list.
-nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
+" nnoremap <silent><nowait> <space>a  :<C-u>CocList diagnostics<cr>
+" " Manage extensions.
+" nnoremap <silent><nowait> <space>e  :<C-u>CocList extensions<cr>
+" " Show commands.
+" nnoremap <silent><nowait> <space>c  :<C-u>CocList commands<cr>
+" " Find symbol of current document.
+" nnoremap <silent><nowait> <space>o  :<C-u>CocList outline<cr>
+" " Search workspace symbols.
+" nnoremap <silent><nowait> <space>s  :<C-u>CocList -I symbols<cr>
+" " Do default action for next item.
+" nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
+" " Do default action for previous item.
+" nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
+" " Resume latest coc list.
+" nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>

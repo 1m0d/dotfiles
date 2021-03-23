@@ -1,8 +1,9 @@
+# zmodload zsh/zprof
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-  export ZSH="/home/domi/.oh-my-zsh"
+export ZSH="/home/domi/.oh-my-zsh"
 
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
@@ -62,10 +63,14 @@ HYPHEN_INSENSITIVE="true"
 # Uncomment the following line if you want to change the command execution time
 # stamp shown in the history command output.
 # The optional three formats: "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
- HIST_STAMPS="yyyy-mm-dd"
+HIST_STAMPS="yyyy-mm-dd"
 
 # Would you like to use another custom folder than $ZSH/custom?
 # ZSH_CUSTOM=/path/to/new-custom-folder
+
+# only load nvm if needed
+# export NVM_LAZY_LOAD=true
+# export NVM_COMPLETION=true
 
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
@@ -75,8 +80,9 @@ plugins=(
   git
   extract
   rails
-  vi-mode
+  zsh-vi-mode
   zsh-autosuggestions
+  zsh-nvm
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -88,12 +94,14 @@ ZSH_HIGHLIGHT_STYLES[suffix-alias]=fg=yellow,underline
 ZSH_HIGHLIGHT_STYLES[precommand]=fg=yellow,underline
 ZSH_HIGHLIGHT_STYLES[arg0]=fg=yellow,bold
 
+ZSH_AUTOSUGGEST_USE_ASYNC=true
+
 # User configuration
 
 # export MANPATH="/usr/local/man:$MANPATH"
 
 # You may need to manually set your language environment
-# export LANG=en_US.UTF-8
+export LANG=en_US.UTF-8
 
 # Preferred editor for local and remote sessions
  if [[ -n $SSH_CONNECTION ]]; then
@@ -106,7 +114,7 @@ ZSH_HIGHLIGHT_STYLES[arg0]=fg=yellow,bold
 # export ARCHFLAGS="-arch x86_64"
 
 # ssh
-# export SSH_KEY_PATH="~/.ssh/rsa_id"
+export SSH_KEY_PATH="~/.ssh/rsa_id"
 
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
@@ -130,15 +138,21 @@ compinit
 # End of lines added by compinstall
 # Lines configured by zsh-newuser-install
 HISTFILE=~/.histfile
-HISTSIZE=1000
-SAVEHIST=1000
+HISTSIZE=2000
+SAVEHIST=10000
 setopt appendhistory autocd
 unsetopt beep
+
 bindkey -v
-# End of lines configured by zsh-newuser-install
-#
-bindkey "^[Od" backward-word
-bindkey "^[Oc" forward-word
+bindkey "^[[1;5D" backward-word
+bindkey "^[[1;5C" forward-word
+
+# home - end keys
+bindkey "^[[H" beginning-of-line
+bindkey "^[[F" end-of-line
+
+bindkey '^[[A' history-search-backward
+bindkey '^[[B' history-search-forward
 
 # import aliases
 source "$ZSH_CUSTOM/aliases"
@@ -146,30 +160,20 @@ source "$ZSH_CUSTOM/aliases"
 export PATH="$HOME/.rbenv/bin:$PATH"
 eval "$(rbenv init - zsh)"
 
-#extract () {
-    #if [ -f $1 ] ; then
-        #case $1 in
-            #*.tar.bz2)   tar xjf $1     ;;
-            #*.tar.gz)    tar xzf $1     ;;
-            #*.bz2)       bunzip2 $1     ;;
-            #*.rar)       unrar e $1     ;;
-            #*.gz)        gunzip $1      ;;
-            #*.tar)       tar xf $1      ;;
-            #*.tbz2)      tar xjf $1     ;;
-            #*.tgz)       tar xzf $1     ;;
-            #*.zip)       unzip $1 $1/   ;;
-            #*.Z)         uncompress $1  ;;
-            #*.7z)        7z x $1        ;;
-            #*)     echo "'$1' cannot be extracted via extract()" ;;
-        #esac
-    #else
-        #echo "'$1' is not a valid file"
-    #fi
-#}
+export PATH="/home/domi/.pyenv/bin:$PATH"
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
 
-#export NVM_DIR="$HOME/.nvm"
-#[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-#[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+load-nvm(){
+  export NVM_DIR="$HOME/.nvm"
+  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+  [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+}
+
+load-docker(){
+  sudo systemctl start docker.service
+  sudo systemctl start containerd.service
+}
 
 autoload -U +X bashcompinit && bashcompinit
 complete -o nospace -C /opt/vault vault
@@ -177,14 +181,30 @@ complete -o nospace -C /opt/vault vault
 # fuzzy find
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-
 # auto ls after cd
 function chpwd() {
     emulate -L zsh
-    ls
+    if [[ "$PWD" == "$HOME/Downloads" ]]; then
+      ls -tr
+    else
+      ls
+    fi
 }
 
 # wait 10ms instead of 40 when pressing escape to switch to normal mode
 export KEYTIMEOUT=1
 export XDG_CURRENT_DESKTOP=i3
-export TERM=xterm-256color
+# export TERM=xterm-256color
+
+if [ -e /home/domi/.nix-profile/etc/profile.d/nix.sh ]; then . /home/domi/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
+
+function gnvim(){
+  load-nvm
+  command gnvim --disable-ext-cmdline --disable-ext-popupmenu --disable-ext-tabline $1 2>/dev/null &; disown
+}
+
+function o(){
+  xdg-open $1 &; disown
+}
+
+# zprof
