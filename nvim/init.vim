@@ -125,12 +125,10 @@ endif
 " gnvim breaks with popup window
 " let g:fzf_layout = { 'down': '40%' }
 
-let g:coc_node_path = '/home/domi/.nvm/versions/node/v14.13.1/bin/node'
-
 let g:which_key_map = {}
 call which_key#register('<Space>', "g:which_key_map")
 
-let g:python3_host_prog = '/home/domi/.pyenv/versions/3.8.0/bin/python'
+" let g:python3_host_prog = '/home/domi/.pyenv/versions/3.8.0/bin/python'
 " ------End of Setings-----
 
 
