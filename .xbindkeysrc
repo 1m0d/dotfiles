@@ -1,0 +1,175 @@
+###########################
+# xbindkeys configuration #
+###########################
+#
+# Version: 0.1.3
+#
+# If you edit this, do not forget to uncomment any lines that you change.
+# The pound(#) symbol may be used anywhere for comments.
+#
+# A list of keys is in /usr/include/X11/keysym.h and in
+# /usr/include/X11/keysymdef.h 
+# The XK_ is not needed. 
+#
+# List of modifier (on my keyboard): 
+#   Control, Shift, Mod1 (Alt), Mod2 (NumLock), 
+#   Mod3 (CapsLock), Mod4, Mod5 (Scroll). 
+#
+# Another way to specifie a key is to use 'xev' and set the 
+# keycode with c:nnn or the modifier with m:nnn where nnn is 
+# the keycode or the state returned by xev 
+#
+# This file is created by xbindkey_config 
+# The structure is : 
+# # Remark 
+# "command" 
+# m:xxx + c:xxx 
+# Shift+... 
+
+
+
+
+#keystate_numlock = enable
+#keystate_scrolllock = enable
+#keystate_capslock = enable
+
+
+
+#lock screen
+"sh /usr/local/i3lock-color/lock.sh"
+   XF86Explorer
+
+#rofi window
+"rofi -show window"
+   XF86LaunchA
+
+#increase brightness
+"light -A 5  && bash ~/scripts/show_brightness.sh"
+   XF86MonBrightnessUp
+
+#decrease brightness
+"light -U 5  && bash ~/scripts/show_brightness.sh"
+   XF86MonBrightnessDown
+
+#brightness max
+"light -S 100"
+   XF86Tools
+
+#brightness min
+"light -S 1"
+   Shift + XF86Tools
+
+#volume up
+"amixer -D pulse sset Master 5%+ && bash ~/scripts/show_volume.sh"
+   XF86AudioRaiseVolume
+
+#volume down
+"amixer -D pulse sset Master 5%- && bash ~/scripts/show_volume.sh"
+   XF86AudioLowerVolume
+
+#mute
+"amixer -D pulse set Master 1+ toggle"
+   XF86AudioMute
+
+#middle mouse click
+"xdotool click 2"
+   VoidSymbol
+
+#screenshot_full
+"shutter -f  -o '~/%T-%m-%d.png' -n -e"
+   Print
+
+#screenchot_select
+"shutter -s  -o '~/%T-%m-%d.png' -n -e"
+   Shift + Print
+
+#screenshot_window
+"shutter -w  -o '~/%T-%m-%d.png' -n -e"
+   Control+Shift + Print
+
+#sleep
+"systemctl suspend"
+   Shift + XF86Explorer
+
+#increas the window opacity
+"transset -a --inc 0.1"
+   Mod4 + equal
+
+#decrease the window opacity-Copy
+"transset -a --dec 0.1"
+   Mod4 + minus
+
+#history back
+"xdotool click 8"
+   Mod4 + b:6
+
+#history forward
+"xdotool click 9"
+   Mod4 + b:7
+
+#rofi combi
+"rofi -combi-modi window,drun,run -modi combi -show combi"
+   Alt + d
+
+#Remark
+"layout-toggle"
+   Mod4 + space
+
+#á
+"xdotool sleep 0.2 key 0xe1"
+   Mod4 + a
+
+#é
+"xdotool sleep 0.2 key 0xe9"
+   Mod4 + e
+
+#í
+"xdotool sleep 0.2 key 0xed"
+   Mod4 + i
+
+#ú
+"xdotool sleep 0.2 key 0xfa"
+   Mod4 + u
+
+#ü
+"xdotool sleep 0.2 key 0x1fb"
+   Shift+Mod4 + u
+
+#ű
+"xdotool sleep 0.2 key 0xfc"
+   Control+Shift+Mod4 + u
+
+#ó
+"xdotool sleep 0.2 key 0xf3"
+   Mod4 + o
+
+#ö
+"xdotool sleep 0.2 key 0x1f5"
+   Shift+Mod4 + o
+
+#ő
+"xdotool sleep 0.2 key 0xf6"
+   Control+Shift+Mod4 + o
+
+#play/pause
+"dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause"
+   XF86AudioPlay
+
+#next
+"dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next"
+   XF86AudioNext
+
+#previuos
+"dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Previous"
+   XF86AudioPrev
+
+#screenshot window mac
+"flameshot screen -p ~/Photos/screenshots"
+   Shift+Mod2+Mod4 + 3
+
+#screenshot gui mac
+"flameshot gui -p ~/Photos/screenshots"
+   Shift+Mod2+Mod4 + 4
+
+#
+# End of xbindkeys configuration
