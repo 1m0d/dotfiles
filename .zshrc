@@ -21,8 +21,6 @@ SPACESHIP_TIME_SHOW=true
 # SPACESHIP_RUBY_SYMBOL='ruby '
 SPACESHIP_PROMPT_ADD_NEWLINE=false
 
-#. /home/domi/.local/lib/python3.5/site-packages/powerline/bindings/zsh/powerline.zsh
-
 # Set list of themes to load
 # Setting this variable when ZSH_THEME=random
 # cause zsh load theme from this variable instead of
@@ -82,13 +80,10 @@ plugins=(
   rails
   zsh-vi-mode
   zsh-autosuggestions
-  zsh-nvm
+  zsh-syntax-highlighting
 )
 
 source $ZSH/oh-my-zsh.sh
-
-# zsh-syntax-highlighting plugin
-source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 ZSH_HIGHLIGHT_STYLES[suffix-alias]=fg=yellow,underline
 ZSH_HIGHLIGHT_STYLES[precommand]=fg=yellow,underline
@@ -155,14 +150,11 @@ bindkey '^[[A' history-search-backward
 bindkey '^[[B' history-search-forward
 
 # import aliases
-source "$ZSH_CUSTOM/aliases"
+source ~/.aliases
 
-export PATH="$HOME/.rbenv/bin:$PATH"
-eval "$(rbenv init - zsh)"
-
-export PATH="/home/domi/.pyenv/bin:$PATH"
-eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"
+# export PATH="/home/domi/.pyenv/bin:$PATH"
+# eval "$(pyenv init -)"
+# eval "$(pyenv virtualenv-init -)"
 
 load-nvm(){
   export NVM_DIR="$HOME/.nvm"
@@ -195,13 +187,6 @@ function chpwd() {
 export KEYTIMEOUT=1
 export XDG_CURRENT_DESKTOP=i3
 # export TERM=xterm-256color
-
-if [ -e /home/domi/.nix-profile/etc/profile.d/nix.sh ]; then . /home/domi/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
-
-function gnvim(){
-  load-nvm
-  command gnvim --disable-ext-cmdline --disable-ext-popupmenu --disable-ext-tabline $1 2>/dev/null &; disown
-}
 
 function o(){
   xdg-open $1 &; disown
