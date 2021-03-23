@@ -71,10 +71,9 @@ status.register("pulseaudio",
    # ),
 #)
 
-status.register("xkblayout")
 # Shows your CPU temperature, if you have a Intel CPU
-status.register("temp",
-                format="{temp:.0f}°C",)
+# status.register("temp",
+#                 format="{temp:.0f}°C",)
 
 # CPU usage
 status.register("cpu_usage",
@@ -86,17 +85,18 @@ status.register("mem",
 
 status.register("scratchpad")
 
+status.register("xkblayout")
 #battery
-status.register("battery",
-                format="{status} {remaining:%E%hh:%Mm} \[{consumption:.2f} Watts\]",
-    alert=True,
-    alert_percentage=5,
-    alert_timeout=5,
-    status={
-        "DIS":  "Discharging",
-        "CHR":  "Charging",
-        "FULL": "Bat full",
-    },)
+# status.register("battery",
+#                 format="{status} {remaining:%E%hh:%Mm} \[{consumption:.2f} Watts\]",
+#     alert=True,
+#     alert_percentage=5,
+#     alert_timeout=5,
+#     status={
+#         "DIS":  "Discharging",
+#         "CHR":  "Charging",
+#         "FULL": "Bat full",
+#     },)
 
 
 # Cmus Music Player

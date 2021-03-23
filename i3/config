@@ -230,32 +230,15 @@ bindsym $mod+r mode "resize"
 default_orientation horizontal
 
 # Startup
-#exec --no-startup-id xflux -l 47.5 -g 19
-#exec --no-startup-id feh --bg-fill ~/Downloads/wallpapers/1501557853407-2.jpg
-exec --no-startup-id xidlelock
+# exec --no-startup-id feh --bg-fill ~/Downloads/wallpapers/1501557853407-2.jpg
+# exec --no-startup-id xidlelock
 exec --no-startup-id compton --config .config/compton.conf
 exec --no-startup-id nitrogen --restore
-exec --no-startup-id xrdb ~/.Xresources
+# exec --no-startup-id xrdb ~/.Xresources
 exec --no-startup-id xbindkeys
 exec --no-startup-id dunst
-exec --no-startup-id dropbox start
-exec --no-startup-id nm-applet
 #exec --no-startup-id xset -b
 exec --no-startup-id setxkbmap -option caps:none
-exec --no-startup-id blueman-applet
-# exec --no-startup-id fluxgui
-exec --no-startup-id redshift -t 6500:3000 -l 47.497913:19.040236
-# TODO move these to a file
-exec --no-startup-id xinput --set-prop "SynPS/2 Synaptics TouchPad" "Synaptics Scrolling Distance" -99 -99
-exec --no-startup-id xinput --set-prop "Synaptics TM2722-001" "Synaptics Scrolling Distance" -99 -99
-exec --no-startup-id synclient HorizTwoFingerScroll=1
-exec --no-startup-id synclient CornerCoasting=1
-exec --no-startup-id synclient TapButton3=2
-exec --no-startup-id synclient ClickButton3=2
-exec --no-startup-id synclient ClickFinger3=2
-# exec --no-startup-id xmodmap ~/.Xmodmap
-exec --no-startup-id /usr/local/bin/monitor-hotplug
-# exec --no-startup-id export XDG_CURRENT_DESKTOP=i3 && pia-client
 
 #i3pybar
 bar {
