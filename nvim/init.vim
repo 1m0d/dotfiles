@@ -29,8 +29,9 @@ Plug 'ConradIrwin/vim-bracketed-paste'
 Plug 'majutsushi/tagbar'
 Plug 'chriskempson/base16-vim'
 Plug 'honza/vim-snippets'
-" Plug 'gennaro-tedesco/nvim-peekup'
+Plug 'junegunn/vim-peekaboo'
 Plug 'liuchengxu/vim-which-key'
+Plug 'tpope/vim-fugitive'
 
 " Initialize plugin system
 call plug#end()
@@ -46,8 +47,9 @@ let g:coc_global_extensions = [
   \'coc-html',
   \'coc-css',
   \'coc-omnisharp',
-  \'coc-python',
+  \'coc-pyright'
   \]
+  " \'coc-python',
   " \'coc-diagnostic'
   " \'coc-jedi',
 " ----------END-----------
@@ -106,6 +108,8 @@ filetype plugin on " load the plugin files for specific file types
 
 set foldmethod=syntax
 set foldlevelstart=20
+
+set timeoutlen=500
 " ------End of Setings-----
 
 "-----Plugin Settings------
@@ -129,6 +133,9 @@ let g:which_key_map = {}
 call which_key#register('<Space>', "g:which_key_map")
 
 " let g:python3_host_prog = '/home/domi/.pyenv/versions/3.8.0/bin/python'
+
+" peekaboo window should be popup instead of split
+let g:peekaboo_window="call CreateCenteredFloatingWindow()"
 " ------End of Setings-----
 
 
@@ -152,12 +159,21 @@ endfunction
 " map <silent> <Leader>n :NERDTreeToggle<CR>
 " open nerdtree with viewing current buffer
 nnoremap <silent> <Leader>n :call NerdTreeSmartOpen()<CR>
-nnoremap <silent> <Leader>f :Ag<CR>
+nnoremap <silent> <Leader>ff :Ag<CR>
+nnoremap <silent> <Leader>ft :Tags<CR>
+nnoremap <silent> <Leader>fb :Buffers<CR>
+nnoremap <silent> <Leader>fh :History<CR>
 nnoremap <silent> <Leader>/ :Lines<CR>
 nnoremap <silent> <C-p> :Files<CR>
 nnoremap <silent> <C-x> :Commands<CR>
 nnoremap <silent> <leader> :<c-u>WhichKey '<Space>'<CR>
 nnoremap <silent> <ESC> :noh<CR>
+nnoremap <silent> <Leader>qq :cclose<CR>
+nnoremap <silent> <Leader>qn :cnext<CR>
+nnoremap <silent> <Leader>qp :cprev<CR>
+nnoremap <silent> <Leader>qg :cfirst<CR>
+nnoremap <silent> <Leader>qG :clast<CR>
+nnoremap <silent> <Leader>qs :cdo s//g \| update <c-b><S-Right><right><right><right>
 
 nmap <Leader>p 0D"0p
 
@@ -259,8 +275,8 @@ autocmd CursorHold * silent call CocActionAsync('highlight')
 nmap <leader>rn <Plug>(coc-rename)
 
 " Formatting selected code.
-" xmap <leader>f  <Plug>(coc-format-selected)
-" nmap <leader>f  <Plug>(coc-format-selected)
+" xmap <leader>fb  <Plug>(coc-format-selected)
+" nmap <leader>fb  <Plug>(coc-format-selected)
 
 augroup mygroup
   autocmd!
@@ -327,3 +343,26 @@ set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 " nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
 " " Resume latest coc list.
 " nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
+
+function! CreateCenteredFloatingWindow()
+    let width = float2nr(&columns * 0.6)
+    let height = float2nr(&lines * 0.6)
+    let top = ((&lines - height) / 2) - 1
+    let left = (&columns - width) / 2
+    let opts = {'relative': 'editor', 'row': top, 'col': left, 'width': width, 'height': height, 'style': 'minimal'}
+
+    let top = "╭" . repeat("─", width - 2) . "╮"
+    let mid = "│" . repeat(" ", width - 2) . "│"
+    let bot = "╰" . repeat("─", width - 2) . "╯"
+    let lines = [top] + repeat([mid], height - 2) + [bot]
+    let s:buf = nvim_create_buf(v:false, v:true)
+    call nvim_buf_set_lines(s:buf, 0, -1, v:true, lines)
+    call nvim_open_win(s:buf, v:true, opts)
+    set winhl=Normal:Floating
+    let opts.row += 1
+    let opts.height -= 2
+    let opts.col += 2
+    let opts.width -= 4
+    call nvim_open_win(nvim_create_buf(v:false, v:true), v:true, opts)
+    au BufWipeout <buffer> exe 'bw '.s:buf
+endfunction

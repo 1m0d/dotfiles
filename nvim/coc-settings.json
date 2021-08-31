@@ -11,7 +11,9 @@
   "tsserver.tsdk": ".yarn/sdks/typescript/lib",
   "tsserver.npm": "/usr/local/bin/npm",
 
-  "python.jediEnabled": true,
+  "coc.preferences.formatOnType": true,
+  // "coc.preferences.formatOnSaveFiletypes": ["python"],
+  "coc.preferences.formatOnTypeFiletypes": ["python"],
 
   "languageserver": {
      "ccls": {
