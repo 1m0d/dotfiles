@@ -32,6 +32,7 @@ Plug 'honza/vim-snippets'
 Plug 'junegunn/vim-peekaboo'
 Plug 'liuchengxu/vim-which-key'
 Plug 'tpope/vim-fugitive'
+Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
 
 " Initialize plugin system
 call plug#end()
@@ -136,6 +137,11 @@ call which_key#register('<Space>', "g:which_key_map")
 
 " peekaboo window should be popup instead of split
 let g:peekaboo_window="call CreateCenteredFloatingWindow()"
+
+" do not hide special characters in json and markdown
+let g:vim_json_syntax_conceal = 0
+let g:vim_markdown_conceal = 0
+let g:vim_markdown_conceal_code_blocks = 0
 " ------End of Setings-----
 
 
@@ -175,7 +181,7 @@ nnoremap <silent> <Leader>qg :cfirst<CR>
 nnoremap <silent> <Leader>qG :clast<CR>
 nnoremap <silent> <Leader>qs :cdo s//g \| update <c-b><S-Right><right><right><right>
 
-nmap <Leader>p 0D"0p
+nmap <Leader>p 0D"0pkdd
 
 vnoremap <C-Y> "+y
 
