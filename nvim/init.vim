@@ -29,10 +29,9 @@ Plug 'ConradIrwin/vim-bracketed-paste'
 Plug 'majutsushi/tagbar'
 Plug 'chriskempson/base16-vim'
 Plug 'honza/vim-snippets'
-Plug 'junegunn/vim-peekaboo'
-Plug 'liuchengxu/vim-which-key'
 Plug 'tpope/vim-fugitive'
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
+Plug 'folke/which-key.nvim'
 
 " Initialize plugin system
 call plug#end()
@@ -130,13 +129,7 @@ endif
 " gnvim breaks with popup window
 " let g:fzf_layout = { 'down': '40%' }
 
-let g:which_key_map = {}
-call which_key#register('<Space>', "g:which_key_map")
-
 " let g:python3_host_prog = '/home/domi/.pyenv/versions/3.8.0/bin/python'
-
-" peekaboo window should be popup instead of split
-let g:peekaboo_window="call CreateCenteredFloatingWindow()"
 
 " do not hide special characters in json and markdown
 let g:vim_json_syntax_conceal = 0
@@ -165,14 +158,9 @@ endfunction
 " map <silent> <Leader>n :NERDTreeToggle<CR>
 " open nerdtree with viewing current buffer
 nnoremap <silent> <Leader>n :call NerdTreeSmartOpen()<CR>
-nnoremap <silent> <Leader>ff :Ag<CR>
-nnoremap <silent> <Leader>ft :Tags<CR>
-nnoremap <silent> <Leader>fb :Buffers<CR>
-nnoremap <silent> <Leader>fh :History<CR>
 nnoremap <silent> <Leader>/ :Lines<CR>
 nnoremap <silent> <C-p> :Files<CR>
 nnoremap <silent> <C-x> :Commands<CR>
-nnoremap <silent> <leader> :<c-u>WhichKey '<Space>'<CR>
 nnoremap <silent> <ESC> :noh<CR>
 nnoremap <silent> <Leader>qq :cclose<CR>
 nnoremap <silent> <Leader>qn :cnext<CR>
@@ -350,25 +338,23 @@ set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 " " Resume latest coc list.
 " nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 
-function! CreateCenteredFloatingWindow()
-    let width = float2nr(&columns * 0.6)
-    let height = float2nr(&lines * 0.6)
-    let top = ((&lines - height) / 2) - 1
-    let left = (&columns - width) / 2
-    let opts = {'relative': 'editor', 'row': top, 'col': left, 'width': width, 'height': height, 'style': 'minimal'}
+lua << EOF
+  require("which-key").setup {
+    -- your configuration comes here
+    -- or leave it empty to use the default settings
+    -- refer to the configuration section below
+  }
+EOF
 
-    let top = "╭" . repeat("─", width - 2) . "╮"
-    let mid = "│" . repeat(" ", width - 2) . "│"
-    let bot = "╰" . repeat("─", width - 2) . "╯"
-    let lines = [top] + repeat([mid], height - 2) + [bot]
-    let s:buf = nvim_create_buf(v:false, v:true)
-    call nvim_buf_set_lines(s:buf, 0, -1, v:true, lines)
-    call nvim_open_win(s:buf, v:true, opts)
-    set winhl=Normal:Floating
-    let opts.row += 1
-    let opts.height -= 2
-    let opts.col += 2
-    let opts.width -= 4
-    call nvim_open_win(nvim_create_buf(v:false, v:true), v:true, opts)
-    au BufWipeout <buffer> exe 'bw '.s:buf
-endfunction
+lua << EOF
+  local wk = require("which-key")
+  wk.register({
+    f = {
+      name = "find",
+      f = { "<cmd>Ag<cr>", "Files" },
+      t = { "<cmd>Tags<cr>", "Tags" },
+      b = { "<cmd>Buffers<cr>", "Buffers" },
+      h = { "<cmd>History<cr>", "History" }
+    },
+  }, { prefix = "<leader>" })
+EOF
