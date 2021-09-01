@@ -21,7 +21,7 @@ Plug 'tpope/vim-rbenv'
 Plug 'tpope/vim-bundler'
 Plug 'vim-ruby/vim-ruby'
 Plug 'vim-airline/vim-airline'
-Plug 'easymotion/vim-easymotion'
+" Plug 'easymotion/vim-easymotion'
 Plug 'chrisbra/Colorizer'
 Plug 'neoclide/coc.nvim', { 'branch': 'release' }
 Plug 'jeetsukumaran/vim-buffergator'
@@ -32,6 +32,7 @@ Plug 'honza/vim-snippets'
 Plug 'tpope/vim-fugitive'
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
 Plug 'folke/which-key.nvim'
+Plug 'phaazon/hop.nvim'
 
 " Initialize plugin system
 call plug#end()
@@ -109,7 +110,7 @@ filetype plugin on " load the plugin files for specific file types
 set foldmethod=syntax
 set foldlevelstart=20
 
-set timeoutlen=500
+set timeoutlen=300
 " ------End of Setings-----
 
 "-----Plugin Settings------
@@ -135,6 +136,8 @@ endif
 let g:vim_json_syntax_conceal = 0
 let g:vim_markdown_conceal = 0
 let g:vim_markdown_conceal_code_blocks = 0
+
+let g:fzf_tags_command = 'ctags -R'
 " ------End of Setings-----
 
 
@@ -158,16 +161,10 @@ endfunction
 " map <silent> <Leader>n :NERDTreeToggle<CR>
 " open nerdtree with viewing current buffer
 nnoremap <silent> <Leader>n :call NerdTreeSmartOpen()<CR>
-nnoremap <silent> <Leader>/ :Lines<CR>
+nnoremap <silent> <Leader>/ :BLines<CR>
 nnoremap <silent> <C-p> :Files<CR>
 nnoremap <silent> <C-x> :Commands<CR>
 nnoremap <silent> <ESC> :noh<CR>
-nnoremap <silent> <Leader>qq :cclose<CR>
-nnoremap <silent> <Leader>qn :cnext<CR>
-nnoremap <silent> <Leader>qp :cprev<CR>
-nnoremap <silent> <Leader>qg :cfirst<CR>
-nnoremap <silent> <Leader>qG :clast<CR>
-nnoremap <silent> <Leader>qs :cdo s//g \| update <c-b><S-Right><right><right><right>
 
 nmap <Leader>p 0D"0pkdd
 
@@ -338,12 +335,19 @@ set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 " " Resume latest coc list.
 " nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 
+function! RipgrepFzf(query, fullscreen)
+  let command_fmt = 'rg --column --line-number --no-heading --color=always --smart-case -- %s || true'
+  let initial_command = printf(command_fmt, shellescape(a:query))
+  let reload_command = printf(command_fmt, '{q}')
+  let spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command]}
+  call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec), a:fullscreen)
+endfunction
+
+command! -nargs=* -bang RG call RipgrepFzf(<q-args>, <bang>0)
+
 lua << EOF
-  require("which-key").setup {
-    -- your configuration comes here
-    -- or leave it empty to use the default settings
-    -- refer to the configuration section below
-  }
+  require("which-key").setup()
+  require'hop'.setup()
 EOF
 
 lua << EOF
@@ -351,10 +355,32 @@ lua << EOF
   wk.register({
     f = {
       name = "find",
-      f = { "<cmd>Ag<cr>", "Files" },
+      f = { "<cmd>Ag<cr>", "in Files" },
       t = { "<cmd>Tags<cr>", "Tags" },
       b = { "<cmd>Buffers<cr>", "Buffers" },
-      h = { "<cmd>History<cr>", "History" }
+      h = { "<cmd>History<cr>", "History" },
+      r = { "<cmd>RG<cr>", "Ripgrep with regex" },
+      n = {
+        name = "nvim",
+        e = { "<cmd>NvimrcEdit<cr>", "Edit init.vim"},
+        r = { "<cmd>NvimrcReload<cr>", "Reload init.vim" },
+        p = { "<cmd>PlugInstall<cr>", "install Plugins" }
+      }
     },
+    q = {
+      name = "quickfix",
+      q = { "<cmd>cclose<cr>", "Quit list" },
+      n = { "<cmd>cnext<cr>", "Next" },
+      p = { "<cmd>cprev<cr>", "Previous" },
+      g = { "<cdm>cfirst<cr>", "First" },
+      G = { "<cmd>clast<cr>", "Last" },
+      s = { ":cdo s//g | update <c-b><S-Right><right><right><right>", "Substitute", silent=false }
+    },
+    ["<space>"] = {
+      name = "Hop",
+      w = { "<cmd>HopWord<cr>", "Word" },
+      f = { "<cmd>HopChar1<cr>", "Char" }
+    },
+    s = { ":s//g <left><left><left>", "Substitute", silent=false }
   }, { prefix = "<leader>" })
 EOF
