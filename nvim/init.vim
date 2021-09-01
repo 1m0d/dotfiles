@@ -33,6 +33,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
 Plug 'folke/which-key.nvim'
 Plug 'phaazon/hop.nvim'
+Plug 'wellle/context.vim'
 
 " Initialize plugin system
 call plug#end()
@@ -346,7 +347,27 @@ endfunction
 command! -nargs=* -bang RG call RipgrepFzf(<q-args>, <bang>0)
 
 lua << EOF
-  require("which-key").setup()
+  require("which-key").setup{
+    plugins = {
+      registers = true
+    },
+    presets = {
+      operators = false, -- adds help for operators like d, y, ... and registers them for motion / text object completion
+      motions = false, -- adds help for motions
+      text_objects = true, -- help for text objects triggered after entering an operator
+      windows = true, -- default bindings on <c-w>
+      nav = true, -- misc bindings to work with windows
+      z = true, -- bindings for folds, spelling and others prefixed with z
+      g = true, -- bindings for prefixed with g
+    },
+    triggers_blacklist = {
+      -- list of mode / prefixes that should never be hooked by WhichKey
+      -- this is mostly relevant for key maps that start with a native binding
+      -- most people should not need to change this
+      i = { "j", "k" },
+      v = { "j", "k", "y" },
+    },
+  }
   require'hop'.setup()
 EOF
 
@@ -381,6 +402,8 @@ lua << EOF
       w = { "<cmd>HopWord<cr>", "Word" },
       f = { "<cmd>HopChar1<cr>", "Char" }
     },
-    s = { ":s//g <left><left><left>", "Substitute", silent=false }
+    s = { ":s//g <left><left><left>", "Substitute", silent=false },
+    S = { '"hyiw:%s/<C-r>h//g<left><left>', "Substitute inner word", silent=false },
+    d = { ":w !diff -y --suppress-common-lines % - <cr>", "Diff since save", silent=false },
   }, { prefix = "<leader>" })
 EOF
