@@ -29,8 +29,9 @@ Plug 'ConradIrwin/vim-bracketed-paste'
 Plug 'majutsushi/tagbar'
 Plug 'chriskempson/base16-vim'
 Plug 'honza/vim-snippets'
-" Plug 'gennaro-tedesco/nvim-peekup'
-Plug 'liuchengxu/vim-which-key'
+Plug 'tpope/vim-fugitive'
+Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
+Plug 'folke/which-key.nvim'
 
 " Initialize plugin system
 call plug#end()
@@ -46,8 +47,9 @@ let g:coc_global_extensions = [
   \'coc-html',
   \'coc-css',
   \'coc-omnisharp',
-  \'coc-python',
+  \'coc-pyright'
   \]
+  " \'coc-python',
   " \'coc-diagnostic'
   " \'coc-jedi',
 " ----------END-----------
@@ -106,6 +108,8 @@ filetype plugin on " load the plugin files for specific file types
 
 set foldmethod=syntax
 set foldlevelstart=20
+
+set timeoutlen=500
 " ------End of Setings-----
 
 "-----Plugin Settings------
@@ -125,12 +129,12 @@ endif
 " gnvim breaks with popup window
 " let g:fzf_layout = { 'down': '40%' }
 
-let g:coc_node_path = '/home/domi/.nvm/versions/node/v14.13.1/bin/node'
+" let g:python3_host_prog = '/home/domi/.pyenv/versions/3.8.0/bin/python'
 
-let g:which_key_map = {}
-call which_key#register('<Space>', "g:which_key_map")
-
-let g:python3_host_prog = '/home/domi/.pyenv/versions/3.8.0/bin/python'
+" do not hide special characters in json and markdown
+let g:vim_json_syntax_conceal = 0
+let g:vim_markdown_conceal = 0
+let g:vim_markdown_conceal_code_blocks = 0
 " ------End of Setings-----
 
 
@@ -154,14 +158,18 @@ endfunction
 " map <silent> <Leader>n :NERDTreeToggle<CR>
 " open nerdtree with viewing current buffer
 nnoremap <silent> <Leader>n :call NerdTreeSmartOpen()<CR>
-nnoremap <silent> <Leader>f :Ag<CR>
 nnoremap <silent> <Leader>/ :Lines<CR>
 nnoremap <silent> <C-p> :Files<CR>
 nnoremap <silent> <C-x> :Commands<CR>
-nnoremap <silent> <leader> :<c-u>WhichKey '<Space>'<CR>
 nnoremap <silent> <ESC> :noh<CR>
+nnoremap <silent> <Leader>qq :cclose<CR>
+nnoremap <silent> <Leader>qn :cnext<CR>
+nnoremap <silent> <Leader>qp :cprev<CR>
+nnoremap <silent> <Leader>qg :cfirst<CR>
+nnoremap <silent> <Leader>qG :clast<CR>
+nnoremap <silent> <Leader>qs :cdo s//g \| update <c-b><S-Right><right><right><right>
 
-nmap <Leader>p 0D"0p
+nmap <Leader>p 0D"0pkdd
 
 vnoremap <C-Y> "+y
 
@@ -261,8 +269,8 @@ autocmd CursorHold * silent call CocActionAsync('highlight')
 nmap <leader>rn <Plug>(coc-rename)
 
 " Formatting selected code.
-" xmap <leader>f  <Plug>(coc-format-selected)
-" nmap <leader>f  <Plug>(coc-format-selected)
+" xmap <leader>fb  <Plug>(coc-format-selected)
+" nmap <leader>fb  <Plug>(coc-format-selected)
 
 augroup mygroup
   autocmd!
@@ -329,3 +337,24 @@ set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 " nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
 " " Resume latest coc list.
 " nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
+
+lua << EOF
+  require("which-key").setup {
+    -- your configuration comes here
+    -- or leave it empty to use the default settings
+    -- refer to the configuration section below
+  }
+EOF
+
+lua << EOF
+  local wk = require("which-key")
+  wk.register({
+    f = {
+      name = "find",
+      f = { "<cmd>Ag<cr>", "Files" },
+      t = { "<cmd>Tags<cr>", "Tags" },
+      b = { "<cmd>Buffers<cr>", "Buffers" },
+      h = { "<cmd>History<cr>", "History" }
+    },
+  }, { prefix = "<leader>" })
+EOF
