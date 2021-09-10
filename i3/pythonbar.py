@@ -105,4 +105,5 @@ status.register("battery",
 # status.register("text",
         # text = " ",)
 
+status.register("redshift")
 status.run()
