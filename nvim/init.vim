@@ -32,6 +32,9 @@ Plug 'honza/vim-snippets'
 Plug 'tpope/vim-fugitive'
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
 Plug 'folke/which-key.nvim'
+Plug 'elixir-editors/vim-elixir'
+Plug 'elixir-lsp/coc-elixir', {'do': 'yarn install && yarn prepack'}
+
 
 " Initialize plugin system
 call plug#end()
@@ -47,7 +50,9 @@ let g:coc_global_extensions = [
   \'coc-html',
   \'coc-css',
   \'coc-omnisharp',
-  \'coc-pyright'
+  \'coc-pyright',
+  \'coc-angular',
+  \'coc-elixir'
   \]
   " \'coc-python',
   " \'coc-diagnostic'
