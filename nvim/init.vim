@@ -417,5 +417,10 @@ lua << EOF
     s = { ":%s//g <left><left><left>", "Substitute", silent=false },
     S = { '"hyiw:%s/<C-r>h//g<left><left>', "Substitute inner word", silent=false },
     d = { ":w !diff -y --suppress-common-lines % - <cr>", "Diff since save", silent=false },
+    y = {
+      name = "Yank",
+      f = {'<cmd>let @+=expand("%:p")<CR>', "yank File path" },
+      F = {'<cmd>let @+=expand("%:t")<CR>', "yank File name" }
+    }
   }, { prefix = "<leader>" })
 EOF
