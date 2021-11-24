@@ -38,6 +38,7 @@ Plug 'phaazon/hop.nvim'
 Plug 'ryanoasis/vim-devicons'
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'sindrets/diffview.nvim'
+Plug 'lervag/vimtex'
 
 
 " Initialize plugin system
@@ -57,6 +58,7 @@ let g:coc_global_extensions = [
   \'coc-pyright',
   \'coc-angular',
   \'coc-elixir'
+  \'coc-texlab'
   \]
   " \'coc-python',
   " \'coc-diagnostic'
@@ -72,6 +74,7 @@ let g:coc_global_extensions = [
 
 " set leader to Space
 let g:mapleader = "\<Space>"
+let maplocalleader = "\<Space>"
 
 set number relativenumber         " hybrid line numbers
 set ruler                         " Show line and column number
@@ -119,6 +122,12 @@ set foldmethod=syntax
 set foldlevelstart=20
 
 set timeoutlen=500
+
+" disable latex symbols
+let g:tex_conceal = ""
+set conceallevel = 0
+
+" latex viewer method:
 " ------End of Setings-----
 
 "-----Plugin Settings------
@@ -144,6 +153,8 @@ endif
 let g:vim_json_syntax_conceal = 0
 let g:vim_markdown_conceal = 0
 let g:vim_markdown_conceal_code_blocks = 0
+
+let g:vimtex_view_method = 'zathura'
 " ------End of Setings-----
 
 
