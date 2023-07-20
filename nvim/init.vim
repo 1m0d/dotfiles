@@ -8,7 +8,6 @@ Plug 'preservim/nerdtree'
 Plug 'preservim/nerdcommenter'
 Plug 'airblade/vim-gitgutter'
 Plug 'sheerun/vim-polyglot'
-Plug 'Yggdroot/indentLine'
 Plug 'mileszs/ack.vim'
 Plug 'jiangmiao/auto-pairs'
 " Plug '/usr/local/opt/fzf'
@@ -38,6 +37,24 @@ Plug 'ryanoasis/vim-devicons'
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'sindrets/diffview.nvim'
 Plug 'lervag/vimtex'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'vim-test/vim-test'
+" Plug 'rcarriga/vim-ultest', { 'do': ':UpdateRemotePlugins' }
+" TODO: add neotest
+Plug 'mfussenegger/nvim-dap'
+Plug 'tmhedberg/SimpylFold'
+Plug 'dccsillag/magma-nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'nvim-lua/plenary.nvim'
+Plug 'TimUntersberger/neogit'
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.0' }
+Plug 'folke/lsp-colors.nvim'
+Plug 'folke/trouble.nvim'
+Plug 'hkupty/iron.nvim'
+Plug 'ggandor/leap.nvim'
+Plug 'lukas-reineke/indent-blankline.nvim'
+Plug 'github/copilot.vim'
+
 
 " Initialize plugin system
 call plug#end()
@@ -53,12 +70,18 @@ let g:coc_global_extensions = [
   \'coc-html',
   \'coc-css',
   \'coc-omnisharp',
-  \'coc-pyright'
-  \'coc-texlab'
+  \'coc-pyright',
+  \'coc-texlab',
+  \'coc-dictionary',
+  \'coc-tag',
+  \'coc-sqlfluff',
   \]
+  " \'coc-tabnine',
+  " \'coc-spell-checker'
   " \'coc-python',
   " \'coc-diagnostic'
   " \'coc-jedi',
+call coc#config('disabledExtensions', ['coc-tabnine'])
 " ----------END-----------
 
 "---------Settings---------
@@ -67,6 +90,9 @@ let g:coc_global_extensions = [
 " if has('vim_starting') !has('nvim') && &compatible
 "  set nocompatible
 " endif
+"
+
+let g:python3_host_prog = "$HOME/.pyenv/versions/3.9.7/envs/neovim/bin/python"
 
 " set leader to Space
 let g:mapleader = "\<Space>"
@@ -121,7 +147,12 @@ set timeoutlen=300
 
 " disable latex symbols
 let g:tex_conceal = ""
-set conceallevel = 0
+" let g:markdown_syntax_conceal=0
+" let g:vim_json_conceal=0
+" set conceallevel=0
+" this also disables indentline
+" let g:indentLine_conceallevel = 0
+
 " ------End of Setings-----
 
 "-----Plugin Settings------
@@ -129,9 +160,10 @@ set conceallevel = 0
 " Add spaces after comment delimiters by default
 let g:NERDSpaceDelims = 1
 
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#formatter = 'jsformatter'
+" let g:airline#extensions#tabline#enabled = 1
+" let g:airline#extensions#tabline#formatter = 'jsformatter'
 let g:airline_powerline_fonts = 1
+let g:airline_extensions = []
 
 "" make FZF respect gitignore if `ag` is installed
 if (executable('ag'))
@@ -151,6 +183,20 @@ let g:vim_markdown_conceal_code_blocks = 0
 let g:fzf_tags_command = 'ctags -R'
 
 let g:vimtex_view_method = 'zathura'
+let g:vimtex_quickfix_open_on_warning = 0
+
+" fixes nerdtree syntax highlight lag
+let g:NERDTreeHighlightCursorline = 0
+let g:NERDTreeLimitedSyntax = 1
+
+" let test#python#pytest#options = "--color=yes"
+let g:ultest_use_pty = 1
+
+let g:magma_image_provider = "ueberzug"
+
+imap <silent><script><expr> <C-K> copilot#Accept("\<CR>")
+let g:copilot_no_tab_map = v:true
+
 " ------End of Setings-----
 
 
@@ -185,6 +231,8 @@ nmap <Leader>p 0D"0pkdd
 
 vnoremap <C-Y> "+y
 
+" vim.keymap.set('<Leader>n', '-', '<Plug>(leap-forward)', {})
+" vim.keymap.set('n', '_', '<Plug>(leap-backward)', {})
 " ----End of Keybinds-----
 
 " -------Commands-------
@@ -224,15 +272,17 @@ else
 endif
 
 " Use tab for trigger completion with characters ahead and navigate.
+" NOTE: There's always complete item selected by default, you may want to enable
+" no select by `"suggest.noselect": true` in your configuration file.
 " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
 " other plugin before putting this into your config.
 inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#pum#visible() ? coc#pum#next(1) :
+      \ CheckBackspace() ? "\<Tab>" :
       \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
 
-function! s:check_back_space() abort
+function! CheckBackspace() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
@@ -367,7 +417,17 @@ function! Executables()
   call fzf#run(fzf#wrap({'source': "find . -type f -executable -not -path '*/\.*'", 'sink': 'vs|term bash'}))
 endfunction
 
+function! FormatParanthesis()
+  execute "normal ^f(a\<CR>"
+
+  let @q='f,a'."\<CR>"."\<ESC>".'@q'
+  normal @q
+
+  execute "normal f)i\<CR>"
+endfunction
+
 command! Executables call Executables()
+command! FormatParanthesis call FormatParanthesis()
 
 lua << EOF
   require("which-key").setup{
@@ -392,6 +452,38 @@ lua << EOF
     },
   }
   require'hop'.setup()
+
+  local dap = require('dap')
+  dap.adapters.python = {
+    type = 'executable';
+    command = '/home/domi/.envs/debugpy/bin/python';
+    args = { '-m', 'debugpy.adapter' };
+  }
+  dap.configurations.python = {
+    {
+      -- The first three options are required by nvim-dap
+      type = 'python'; -- the type here established the link to the adapter definition: `dap.adapters.python`
+      request = 'launch';
+      name = "Launch file";
+
+      -- Options below are for debugpy, see https://github.com/microsoft/debugpy/wiki/Debug-configuration-settings for supported options
+
+      program = "${file}"; -- This configuration will launch the current file if used.
+      pythonPath = function()
+        -- debugpy supports launching an application with a different interpreter then the one used to launch debugpy itself.
+        -- The code below looks for a `venv` or `.venv` folder in the current directly and uses the python within.
+        -- You could adapt this - to for example use the `VIRTUAL_ENV` environment variable.
+        local cwd = vim.fn.getcwd()
+        if vim.fn.executable(cwd .. '/venv/bin/python') == 1 then
+          return cwd .. '/venv/bin/python'
+        elseif vim.fn.executable(cwd .. '/.venv/bin/python') == 1 then
+          return cwd .. '/.venv/bin/python'
+        else
+          return '/usr/bin/python'
+        end
+      end;
+    },
+  }
 EOF
 
 lua << EOF
@@ -412,6 +504,12 @@ lua << EOF
         p = { "<cmd>PlugInstall<cr>", "install Plugins" }
       }
     },
+
+    F = {
+      name = "Format",
+      p = { "<cmd>FormatParanthesis<cr>", "Format Paranthesis" }
+    },
+
     q = {
       name = "quickfix",
       q = { "<cmd>cclose<cr>", "Quit list" },
@@ -421,6 +519,7 @@ lua << EOF
       G = { "<cmd>clast<cr>", "Last" },
       s = { ":cdo s//g | update <c-b><S-Right><right><right><right>", "Substitute", silent=false }
     },
+
     ["<space>"] = {
       name = "Hop",
       w = { "<cmd>HopWord<cr>", "Word" },
@@ -433,6 +532,109 @@ lua << EOF
       name = "Yank",
       f = {'<cmd>let @+=expand("%:p")<CR>', "yank File path" },
       F = {'<cmd>let @+=expand("%:t")<CR>', "yank File name" }
+    },
+    t = {
+      name = "test",
+      n = { "<cmd>UltestNearest<CR>", "Test Nearest" },
+      t = { "<cmd>UltestSummary<CR>", "Test Tab" },
+      f = { "<cmd>Ultest<CR>", "Test File" }
+    },
+    C = {
+      name = "Copilot",
+      l = { "<cmd>Copilot panel<CR>", "Copilot List"}
+    },
+    m = {
+      name = "magma",
+      i = { "<cmd>MagmaInit<CR>", "Initialize" },
+      l = { "<cmd>MagmaEvaluateLine<CR>", "evaluate Line" },
+      v = { "<cmd>MagmaEvaluateVisual<CR>", "evaluate Visual" },
+      r = { "<cmd>MagmaReEvaluateCell<CR>", "Reevaluate cell" }
     }
   }, { prefix = "<leader>" })
+
+  wk.register(
+    {
+      m = {
+        name = "magma",
+        v = { "<cmd>MagmaEvaluateVisual<CR>", "evaluate Visual" },
+      }
+    },
+    {mode = "v"}
+  )
+EOF
+
+lua << EOF
+require'nvim-treesitter.configs'.setup {
+  ensure_installed = { "python", "comment", "dockerfile", "gitignore", "make", "regex", "sql", "vim", "yaml", "http", "query"},
+  auto_install = true,
+  highlight = {
+    enable = true,
+    -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
+    -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
+    -- Using this option may slow down your editor, and you may see some duplicate highlights.
+    -- Instead of true it can also be a list of languages
+    additional_vim_regex_highlighting = false,
+  },
+}
+EOF
+
+lua << EOF
+  require("trouble").setup {}
+EOF
+
+lua << EOF
+  local iron = require("iron.core")
+
+  iron.setup {
+    config = {
+      -- Whether a repl should be discarded or not
+      scratch_repl = true,
+      -- Your repl definitions come here
+      repl_definition = {
+        sh = {
+          command = {"zsh"}
+        },
+        python = {
+          command = {"ipython"},
+          format = require("iron.fts.common").bracketed_paste,
+        }
+      },
+      -- How the repl window will be displayed
+      -- See below for more information
+      repl_open_cmd = require('iron.view').bottom(30),
+    },
+    -- Iron doesn't set keymaps by default anymore.
+    -- You can set them here or manually add keymaps to the functions in iron.core
+    keymaps = {
+      send_motion = "<space>sc",
+      visual_send = "<space>sc",
+      send_file = "<space>sf",
+      send_line = "<space>sl",
+      send_mark = "<space>sm",
+      mark_motion = "<space>mc",
+      mark_visual = "<space>mc",
+      remove_mark = "<space>md",
+      cr = "<space>s<cr>",
+      interrupt = "<space>s<space>",
+      exit = "<space>sq",
+      clear = "<space>cl",
+    },
+    -- If the highlight is on, you can change how it looks
+    -- For the available options, check nvim_set_hl
+    highlight = {
+      italic = true
+    }
+  }
+EOF
+
+lua << EOF
+  require('leap')
+  vim.keymap.set('n', '-', '<Plug>(leap-forward)', {})
+EOF
+
+lua << EOF
+  require("indent_blankline").setup {
+    show_current_context = true,
+    show_current_context_start = true,
+  }
 EOF

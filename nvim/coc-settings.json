@@ -12,8 +12,18 @@
   "tsserver.npm": "/usr/local/bin/npm",
 
   "coc.preferences.formatOnType": true,
-  // "coc.preferences.formatOnSaveFiletypes": ["python"],
+  "coc.preferences.formatOnSaveFiletypes": ["python"],
   "coc.preferences.formatOnTypeFiletypes": ["python"],
+
+  "suggest.noselect": true,
+  // "tabnine.priority": 2,
+
+  "python.linting.flake8Enabled": true,
+  "python.linting.pylintEnabled": true,
+  "python.linting.mypyEnabled": true,
+  "python.linting.enabled": true,
+  "python.formatting.provider": "black",
+  "pyright.organizeimports.provider": "isort",
 
   "languageserver": {
      "ccls": {
@@ -29,5 +39,23 @@
          }
        }
      }
-   }
+     // "sourcery": {
+       // "command": "/usr/local/bin/sourcery",
+       // "args": [
+           // "lsp"
+       // ],
+       // "filetypes": [
+           // "python"
+       // ],
+       // "initializationOptions": {
+           // "token": " <Your Token Here>",
+           // "extension_version": "coc.nvim",
+           // "editor_version": "vim"
+       // },
+       // "settings": {},
+       // "trace.server": "verbose"
+     // }
+  },
+  "cSpell.userWords": [
+  ]
 }
