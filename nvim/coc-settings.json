@@ -21,9 +21,13 @@
   "python.linting.flake8Enabled": true,
   "python.linting.pylintEnabled": true,
   "python.linting.mypyEnabled": true,
+  "python.linting.pytypeEnabled": true,
   "python.linting.enabled": true,
   "python.formatting.provider": "black",
   "pyright.organizeimports.provider": "isort",
+  "pyright.testing.provider": "pytest",
+
+  "inlayHint.enableParameter": false,
 
   "languageserver": {
      "ccls": {
