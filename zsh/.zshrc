@@ -8,6 +8,8 @@ export ZSH="/home/domi/.oh-my-zsh"
 ZSH_THEME="spaceship"
 SPACESHIP_TIME_SHOW=true
 SPACESHIP_PROMPT_ADD_NEWLINE=false
+SPACESHIP_DIR_TRUNC_REPO=false
+SPACESHIP_PROMPT_ASYNC=false
 
 # Set list of themes to load
 # Setting this variable when ZSH_THEME=random
@@ -147,3 +149,9 @@ function chpwd() {
 
 # wait 10ms instead of 40 when pressing escape to switch to normal mode
 export KEYTIMEOUT=1
+# Pyenv
+export PYENV_ROOT="$HOME/.pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init --path)"
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
