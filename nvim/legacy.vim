@@ -10,7 +10,6 @@ Plug 'airblade/vim-gitgutter'
 Plug 'sheerun/vim-polyglot'
 Plug 'mileszs/ack.vim'
 Plug 'jiangmiao/auto-pairs'
-" Plug '/usr/local/opt/fzf'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'tpope/vim-endwise'
@@ -20,7 +19,6 @@ Plug 'tpope/vim-rbenv'
 Plug 'tpope/vim-bundler'
 Plug 'vim-ruby/vim-ruby'
 Plug 'vim-airline/vim-airline'
-" Plug 'easymotion/vim-easymotion'
 Plug 'chrisbra/Colorizer'
 Plug 'neoclide/coc.nvim', { 'branch': 'release' }
 Plug 'jeetsukumaran/vim-buffergator'
@@ -32,18 +30,14 @@ Plug 'tpope/vim-fugitive'
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
 Plug 'folke/which-key.nvim'
 Plug 'phaazon/hop.nvim'
-" Plug 'wellle/context.vim'
 Plug 'ryanoasis/vim-devicons'
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'sindrets/diffview.nvim'
 Plug 'lervag/vimtex'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'vim-test/vim-test'
-" Plug 'rcarriga/vim-ultest', { 'do': ':UpdateRemotePlugins' }
-" TODO: add neotest
 Plug 'mfussenegger/nvim-dap'
 Plug 'tmhedberg/SimpylFold'
-Plug 'dccsillag/magma-nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'nvim-lua/plenary.nvim'
 Plug 'TimUntersberger/neogit'
 Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' }
@@ -57,7 +51,6 @@ Plug 'github/copilot.vim'
 Plug 'chipsenkbeil/distant.nvim', { 'branch': 'v0.3' }
 
 " avante nvim and dependencies
-
 " Deps
 Plug 'stevearc/dressing.nvim'
 Plug 'nvim-lua/plenary.nvim'
@@ -72,9 +65,6 @@ Plug 'echasnovski/mini.icons'
 " Plug 'HakonHarnes/img-clip.nvim'
 " Plug 'zbirenbaum/copilot.lua'
 " Plug 'MeanderingProgrammer/render-markdown.nvim'
-
-" Yay, pass source=true if you want to build from source
-" Plug 'yetone/avante.nvim', { 'branch': 'main', 'do': 'make' }
 
 call plug#end()
 
