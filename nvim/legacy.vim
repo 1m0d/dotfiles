@@ -111,7 +111,7 @@ call coc#config('disabledExtensions', ['coc-tabnine'])
 " endif
 "
 
-let g:python3_host_prog = "$HOME/.pyenv/versions/3.9.7/envs/neovim/bin/python"
+let g:python3_host_prog = "$HOME/.pyenv/versions/neovim/bin/python"
 
 " set leader to Space
 let g:mapleader = "\<Space>"
