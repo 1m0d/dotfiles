@@ -8,7 +8,6 @@ Plug 'preservim/nerdtree'
 Plug 'preservim/nerdcommenter'
 Plug 'airblade/vim-gitgutter'
 Plug 'sheerun/vim-polyglot'
-Plug 'Yggdroot/indentLine'
 Plug 'mileszs/ack.vim'
 Plug 'jiangmiao/auto-pairs'
 " Plug '/usr/local/opt/fzf'
@@ -21,7 +20,7 @@ Plug 'tpope/vim-rbenv'
 Plug 'tpope/vim-bundler'
 Plug 'vim-ruby/vim-ruby'
 Plug 'vim-airline/vim-airline'
-Plug 'easymotion/vim-easymotion'
+" Plug 'easymotion/vim-easymotion'
 Plug 'chrisbra/Colorizer'
 Plug 'neoclide/coc.nvim', { 'branch': 'release' }
 Plug 'jeetsukumaran/vim-buffergator'
@@ -32,16 +31,51 @@ Plug 'honza/vim-snippets'
 Plug 'tpope/vim-fugitive'
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
 Plug 'folke/which-key.nvim'
-Plug 'elixir-editors/vim-elixir'
-Plug 'elixir-lsp/coc-elixir', {'do': 'yarn install && yarn prepack'}
 Plug 'phaazon/hop.nvim'
+" Plug 'wellle/context.vim'
 Plug 'ryanoasis/vim-devicons'
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'sindrets/diffview.nvim'
 Plug 'lervag/vimtex'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'vim-test/vim-test'
+" Plug 'rcarriga/vim-ultest', { 'do': ':UpdateRemotePlugins' }
+" TODO: add neotest
+Plug 'mfussenegger/nvim-dap'
+Plug 'tmhedberg/SimpylFold'
+Plug 'dccsillag/magma-nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'nvim-lua/plenary.nvim'
+Plug 'TimUntersberger/neogit'
+Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' }
+Plug 'nvim-telescope/telescope.nvim' ", { 'tag': '0.1.0' }
+Plug 'folke/lsp-colors.nvim'
+Plug 'folke/trouble.nvim'
+Plug 'hkupty/iron.nvim'
+Plug 'ggandor/leap.nvim'
+Plug 'lukas-reineke/indent-blankline.nvim', { 'tag': 'v2.20.8' }
+Plug 'github/copilot.vim'
+Plug 'chipsenkbeil/distant.nvim', { 'branch': 'v0.3' }
 
+" avante nvim and dependencies
 
-" Initialize plugin system
+" Deps
+Plug 'stevearc/dressing.nvim'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'MunifTanjim/nui.nvim'
+Plug 'MeanderingProgrammer/render-markdown.nvim'
+
+Plug 'yetone/avante.nvim', { 'branch': 'main', 'do': 'make' }
+
+" Optional deps
+Plug 'nvim-tree/nvim-web-devicons'
+Plug 'echasnovski/mini.icons'
+" Plug 'HakonHarnes/img-clip.nvim'
+" Plug 'zbirenbaum/copilot.lua'
+" Plug 'MeanderingProgrammer/render-markdown.nvim'
+
+" Yay, pass source=true if you want to build from source
+" Plug 'yetone/avante.nvim', { 'branch': 'main', 'do': 'make' }
+
 call plug#end()
 
 " ------End of Plugins-----
@@ -56,13 +90,17 @@ let g:coc_global_extensions = [
   \'coc-css',
   \'coc-omnisharp',
   \'coc-pyright',
-  \'coc-angular',
-  \'coc-elixir'
-  \'coc-texlab'
+  \'coc-texlab',
+  \'coc-dictionary',
+  \'coc-tag',
+  \'coc-sqlfluff',
   \]
+  " \'coc-tabnine',
+  " \'coc-spell-checker'
   " \'coc-python',
   " \'coc-diagnostic'
   " \'coc-jedi',
+call coc#config('disabledExtensions', ['coc-tabnine'])
 " ----------END-----------
 
 "---------Settings---------
@@ -71,6 +109,9 @@ let g:coc_global_extensions = [
 " if has('vim_starting') !has('nvim') && &compatible
 "  set nocompatible
 " endif
+"
+
+let g:python3_host_prog = "$HOME/.pyenv/versions/3.9.7/envs/neovim/bin/python"
 
 " set leader to Space
 let g:mapleader = "\<Space>"
@@ -121,13 +162,16 @@ filetype plugin on " load the plugin files for specific file types
 set foldmethod=syntax
 set foldlevelstart=20
 
-set timeoutlen=500
+set timeoutlen=300
 
 " disable latex symbols
 let g:tex_conceal = ""
-set conceallevel = 0
+" let g:markdown_syntax_conceal=0
+" let g:vim_json_conceal=0
+" set conceallevel=0
+" this also disables indentline
+" let g:indentLine_conceallevel = 0
 
-" latex viewer method:
 " ------End of Setings-----
 
 "-----Plugin Settings------
@@ -141,7 +185,7 @@ let g:airline_powerline_fonts = 1
 
 "" make FZF respect gitignore if `ag` is installed
 if (executable('ag'))
-    let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore .git -g ""'
+    let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore .git --ignore docs -g ""'
 endif
 
 " gnvim breaks with popup window
@@ -154,7 +198,26 @@ let g:vim_json_syntax_conceal = 0
 let g:vim_markdown_conceal = 0
 let g:vim_markdown_conceal_code_blocks = 0
 
+let g:fzf_tags_command = 'ctags -R'
+
 let g:vimtex_view_method = 'zathura'
+let g:vimtex_quickfix_open_on_warning = 0
+
+" fixes nerdtree syntax highlight lag
+let g:NERDTreeHighlightCursorline = 0
+let g:NERDTreeLimitedSyntax = 1
+
+" nerdtree left side
+let g:NERDTreeWinPos = "left"
+
+" let test#python#pytest#options = "--color=yes"
+let g:ultest_use_pty = 1
+
+let g:magma_image_provider = "ueberzug"
+
+imap <silent><script><expr> <C-K> copilot#Accept("\<CR>")
+let g:copilot_no_tab_map = v:true
+
 " ------End of Setings-----
 
 
@@ -178,7 +241,7 @@ endfunction
 " map <silent> <Leader>n :NERDTreeToggle<CR>
 " open nerdtree with viewing current buffer
 nnoremap <silent> <Leader>n :call NerdTreeSmartOpen()<CR>
-nnoremap <silent> <Leader>/ :Lines<CR>
+nnoremap <silent> <Leader>/ :BLines<CR>
 nnoremap <silent> <C-p> :Files<CR>
 nnoremap <silent> <C-x> :Commands<CR>
 nnoremap <silent> <ESC> :noh<CR>
@@ -195,11 +258,13 @@ nmap <Leader>p 0D"0pkdd
 
 vnoremap <C-Y> "+y
 
+" vim.keymap.set('<Leader>n', '-', '<Plug>(leap-forward)', {})
+" vim.keymap.set('n', '_', '<Plug>(leap-backward)', {})
 " ----End of Keybinds-----
 
 " -------Commands-------
-command! NvimrcEdit :tabnew ~/.config/nvim/init.vim
-command! NvimrcReload :source ~/.config/nvim/init.vim
+command! NvimrcEdit :tabnew ~/.config/nvim/init.lua
+command! NvimrcReload :source ~/.config/nvim/init.lua
 " ---------End----------
 
 " ---Appearance---
@@ -220,29 +285,34 @@ call one#highlight('vimCommentTitle', 'FFFFFF', '', 'bold') " capital plus + at 
 
 " call one#highlight('Normal', 'D3D5D3,', '1D1E1F', '')
 
+highlight CocInlayHint gui=italic guifg=LightBlue guibg=NONE
 " --------COC settings--------------
 " Don't pass messages to |ins-completion-menu|.
 set shortmess+=c
 
 " Always show the signcolumn, otherwise it would shift the text each time
 " diagnostics appear/become resolved.
-if has("patch-8.1.1564")
-  " Recently vim can merge signcolumn and number column into one
-  set signcolumn=number
-else
-  set signcolumn=yes
-endif
+" if has("patch-8.1.1564")
+  " " Recently vim can merge signcolumn and number column into one
+  " set signcolumn=number
+" else
+  " set signcolumn=yes
+" endif
+
+set signcolumn=auto
 
 " Use tab for trigger completion with characters ahead and navigate.
+" NOTE: There's always complete item selected by default, you may want to enable
+" no select by `"suggest.noselect": true` in your configuration file.
 " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
 " other plugin before putting this into your config.
 inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#pum#visible() ? coc#pum#next(1) :
+      \ CheckBackspace() ? "\<Tab>" :
       \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
 
-function! s:check_back_space() abort
+function! CheckBackspace() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
@@ -359,6 +429,9 @@ set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 " nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
 " " Resume latest coc list.
 " nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
+"
+autocmd FileType python let b:coc_root_patterns = ['.git', '.env', 'venv', '.venv', 'setup.cfg', 'setup.py', 'pyproject.toml', 'pyrightconfig.json']
+
 
 function! RipgrepFzf(query, fullscreen)
   let command_fmt = 'rg --column --line-number --no-heading --color=always --smart-case -- %s || true'
@@ -374,56 +447,14 @@ function! Executables()
   call fzf#run(fzf#wrap({'source': "find . -type f -executable -not -path '*/\.*'", 'sink': 'vs|term bash'}))
 endfunction
 
+function! FormatParanthesis()
+  execute "normal ^f(a\<CR>"
+
+  let @q='f,a'."\<CR>"."\<ESC>".'@q'
+  normal @q
+
+  execute "normal f)i\<CR>"
+endfunction
+
 command! Executables call Executables()
-
-lua << EOF
-  require("which-key").setup {
-    -- your configuration comes here
-    -- or leave it empty to use the default settings
-    -- refer to the configuration section below
-  }
-  require'hop'.setup()
-EOF
-
-lua << EOF
-  local wk = require("which-key")
-  wk.register({
-    f = {
-      name = "find",
-      f = { "<cmd>Ag<cr>", "Files" },
-      t = { "<cmd>Tags<cr>", "Tags" },
-      b = { "<cmd>Buffers<cr>", "Buffers" },
-      h = { "<cmd>History<cr>", "History" },
-      r = { "<cmd>RG<cr>", "Ripgrep with regex" },
-      x = { "<cmd>Executables<cr>", "eXecutables" },
-      n = {
-        name = "nvim",
-        e = { "<cmd>NvimrcEdit<cr>", "Edit init.vim"},
-        r = { "<cmd>NvimrcReload<cr>", "Reload init.vim" },
-        p = { "<cmd>PlugInstall<cr>", "install Plugins" }
-      }
-    },
-    q = {
-      name = "quickfix",
-      q = { "<cmd>cclose<cr>", "Quit list" },
-      n = { "<cmd>cnext<cr>", "Next" },
-      p = { "<cmd>cprev<cr>", "Previous" },
-      g = { "<cdm>cfirst<cr>", "First" },
-      G = { "<cmd>clast<cr>", "Last" },
-      s = { ":cdo s//g | update <c-b><S-Right><right><right><right>", "Substitute", silent=false }
-    },
-    ["<space>"] = {
-      name = "Hop",
-      w = { "<cmd>HopWord<cr>", "Word" },
-      f = { "<cmd>HopChar1<cr>", "Char" }
-    },
-    s = { ":%s//g <left><left><left>", "Substitute", silent=false },
-    S = { '"hyiw:%s/<C-r>h//g<left><left>', "Substitute inner word", silent=false },
-    d = { ":w !diff -y --suppress-common-lines % - <cr>", "Diff since save", silent=false },
-    y = {
-      name = "Yank",
-      f = {'<cmd>let @+=expand("%:p")<CR>', "yank File path" },
-      F = {'<cmd>let @+=expand("%:t")<CR>', "yank File name" }
-    }
-  }, { prefix = "<leader>" })
-EOF
+command! FormatParanthesis call FormatParanthesis()
