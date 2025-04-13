@@ -11,14 +11,52 @@ require("which-key").setup{
       z = true, -- bindings for folds, spelling and others prefixed with z
       g = true, -- bindings for prefixed with g
     },
-    triggers_blacklist = {
-      -- list of mode / prefixes that should never be hooked by WhichKey
-      -- this is mostly relevant for key maps that start with a native binding
-      -- most people should not need to change this
-      i = { "j", "k" },
-      v = { "j", "k", "y" },
-    },
 }
+
+require("which-key").add(
+  {
+    { "<leader><space>", group = "Hop" },
+    { "<leader><space>f", "<cmd>HopChar1<cr>", desc = "Char" },
+    { "<leader><space>w", "<cmd>HopWord<cr>", desc = "Word" },
+    { "<leader>C", group = "Copilot" },
+    { "<leader>Cl", "<cmd>Copilot panel<CR>", desc = "Copilot List" },
+    { "<leader>F", group = "Format" },
+    { "<leader>Fp", "<cmd>FormatParanthesis<cr>", desc = "Format Paranthesis" },
+    { "<leader>S", '"hyiw:%s/<C-r>h//g<left><left>', desc = "Substitute inner word", silent = false },
+    { "<leader>d", ":w !diff -y --suppress-common-lines % - <cr>", desc = "Diff since save", silent = false },
+    { "<leader>f", group = "find" },
+    { "<leader>fb", "<cmd>Buffers<cr>", desc = "Buffers" },
+    { "<leader>ff", "<cmd>Ag<cr>", desc = "in Files" },
+    { "<leader>fh", "<cmd>History<cr>", desc = "History" },
+    { "<leader>fn", group = "nvim" },
+    { "<leader>fne", "<cmd>NvimrcEdit<cr>", desc = "Edit init.vim" },
+    { "<leader>fnp", "<cmd>PlugInstall<cr>", desc = "install Plugins" },
+    { "<leader>fnr", "<cmd>NvimrcReload<cr>", desc = "Reload init.vim" },
+    { "<leader>fr", "<cmd>RG<cr>", desc = "Ripgrep with regex" },
+    { "<leader>ft", "<cmd>Tags<cr>", desc = "Tags" },
+    { "<leader>fx", "<cmd>Executables<cr>", desc = "eXecutables" },
+    { "<leader>m", group = "magma" },
+    { "<leader>mi", "<cmd>MagmaInit<CR>", desc = "Initialize" },
+    { "<leader>ml", "<cmd>MagmaEvaluateLine<CR>", desc = "evaluate Line" },
+    { "<leader>mr", "<cmd>MagmaReEvaluateCell<CR>", desc = "Reevaluate cell" },
+    { "<leader>mv", "<cmd>MagmaEvaluateVisual<CR>", desc = "evaluate Visual" },
+    { "<leader>q", group = "quickfix" },
+    { "<leader>qG", "<cmd>clast<cr>", desc = "Last" },
+    { "<leader>qg", "<cdm>cfirst<cr>", desc = "First" },
+    { "<leader>qn", "<cmd>cnext<cr>", desc = "Next" },
+    { "<leader>qp", "<cmd>cprev<cr>", desc = "Previous" },
+    { "<leader>qq", "<cmd>cclose<cr>", desc = "Quit list" },
+    { "<leader>qs", ":cdo s//g | update <c-b><S-Right><right><right><right>", desc = "Substitute", silent = false },
+    { "<leader>s", ":%s//g <left><left><left>", desc = "Substitute", silent = false },
+    { "<leader>t", group = "test" },
+    { "<leader>tf", "<cmd>Ultest<CR>", desc = "Test File" },
+    { "<leader>tn", "<cmd>UltestNearest<CR>", desc = "Test Nearest" },
+    { "<leader>tt", "<cmd>UltestSummary<CR>", desc = "Test Tab" },
+    { "<leader>y", group = "Yank" },
+    { "<leader>yF", '<cmd>let @+=expand("%:t")<CR>', desc = "yank File name" },
+    { "<leader>yf", '<cmd>let @+=expand("%:p")<CR>', desc = "yank File path" },
+  }
+)
 
 require'hop'.setup()
 
@@ -54,81 +92,6 @@ dap.configurations.python = {
     },
 }
 
-local wk = require("which-key")
-wk.register({
-    f = {
-      name = "find",
-      f = { "<cmd>Ag<cr>", "in Files" },
-      t = { "<cmd>Tags<cr>", "Tags" },
-      b = { "<cmd>Buffers<cr>", "Buffers" },
-      h = { "<cmd>History<cr>", "History" },
-      r = { "<cmd>RG<cr>", "Ripgrep with regex" },
-      x = { "<cmd>Executables<cr>", "eXecutables" },
-      n = {
-        name = "nvim",
-        e = { "<cmd>NvimrcEdit<cr>", "Edit init.vim"},
-        r = { "<cmd>NvimrcReload<cr>", "Reload init.vim" },
-        p = { "<cmd>PlugInstall<cr>", "install Plugins" }
-      }
-    },
-
-    F = {
-      name = "Format",
-      p = { "<cmd>FormatParanthesis<cr>", "Format Paranthesis" }
-    },
-
-    q = {
-      name = "quickfix",
-      q = { "<cmd>cclose<cr>", "Quit list" },
-      n = { "<cmd>cnext<cr>", "Next" },
-      p = { "<cmd>cprev<cr>", "Previous" },
-      g = { "<cdm>cfirst<cr>", "First" },
-      G = { "<cmd>clast<cr>", "Last" },
-      s = { ":cdo s//g | update <c-b><S-Right><right><right><right>", "Substitute", silent=false }
-    },
-
-    ["<space>"] = {
-      name = "Hop",
-      w = { "<cmd>HopWord<cr>", "Word" },
-      f = { "<cmd>HopChar1<cr>", "Char" }
-    },
-    s = { ":%s//g <left><left><left>", "Substitute", silent=false },
-    S = { '"hyiw:%s/<C-r>h//g<left><left>', "Substitute inner word", silent=false },
-    d = { ":w !diff -y --suppress-common-lines % - <cr>", "Diff since save", silent=false },
-    y = {
-      name = "Yank",
-      f = {'<cmd>let @+=expand("%:p")<CR>', "yank File path" },
-      F = {'<cmd>let @+=expand("%:t")<CR>', "yank File name" }
-    },
-    t = {
-      name = "test",
-      n = { "<cmd>UltestNearest<CR>", "Test Nearest" },
-      t = { "<cmd>UltestSummary<CR>", "Test Tab" },
-      f = { "<cmd>Ultest<CR>", "Test File" }
-    },
-    C = {
-      name = "Copilot",
-      l = { "<cmd>Copilot panel<CR>", "Copilot List"}
-    },
-    m = {
-      name = "magma",
-      i = { "<cmd>MagmaInit<CR>", "Initialize" },
-      l = { "<cmd>MagmaEvaluateLine<CR>", "evaluate Line" },
-      v = { "<cmd>MagmaEvaluateVisual<CR>", "evaluate Visual" },
-      r = { "<cmd>MagmaReEvaluateCell<CR>", "Reevaluate cell" }
-    }
-  }, { prefix = "<leader>" })
-
-  wk.register(
-    {
-      m = {
-        name = "magma",
-        v = { "<cmd>MagmaEvaluateVisual<CR>", "evaluate Visual" },
-      }
-    },
-    {mode = "v"}
-  )
-
 require'nvim-treesitter.configs'.setup {
   ensure_installed = { "python", "comment", "dockerfile", "gitignore", "make", "regex", "sql", "vim", "yaml", "http", "query"},
   auto_install = true,
@@ -144,52 +107,6 @@ require'nvim-treesitter.configs'.setup {
 
 require("trouble").setup {}
 
-local iron = require("iron.core")
-
-iron.setup {
-    config = {
-      -- Whether a repl should be discarded or not
-      scratch_repl = true,
-      -- Your repl definitions come here
-      repl_definition = {
-        sh = {
-          command = {"zsh"}
-        },
-        python = {
-          command = {"ipython"},
-          format = require("iron.fts.common").bracketed_paste,
-        }
-      },
-      -- How the repl window will be displayed
-      -- See below for more information
-      repl_open_cmd = require('iron.view').bottom(30),
-    },
-    -- Iron doesn't set keymaps by default anymore.
-    -- You can set them here or manually add keymaps to the functions in iron.core
-    keymaps = {
-      send_motion = "<space>sc",
-      visual_send = "<space>sc",
-      send_file = "<space>sf",
-      send_line = "<space>sl",
-      send_mark = "<space>sm",
-      mark_motion = "<space>mc",
-      mark_visual = "<space>mc",
-      remove_mark = "<space>md",
-      cr = "<space>s<cr>",
-      interrupt = "<space>s<space>",
-      exit = "<space>sq",
-      clear = "<space>cl",
-    },
-    -- If the highlight is on, you can change how it looks
-    -- For the available options, check nvim_set_hl
-    highlight = {
-      italic = true
-    }
-  }
-
-require('leap')
-vim.keymap.set('n', '-', '<Plug>(leap-forward)', {})
-
 require("indent_blankline").setup {
     show_current_context = true,
     show_current_context_start = true,
@@ -197,3 +114,8 @@ require("indent_blankline").setup {
 
 require("distant"):setup()
 
+require('avante_lib').load()
+require('avante').setup ({
+      provider = "copilot",
+      model = "claude-3-5-sonnet-20241022"
+})

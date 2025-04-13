@@ -56,10 +56,26 @@ Plug 'lukas-reineke/indent-blankline.nvim', { 'tag': 'v2.20.8' }
 Plug 'github/copilot.vim'
 Plug 'chipsenkbeil/distant.nvim', { 'branch': 'v0.3' }
 
+" avante nvim and dependencies
 
+" Deps
+Plug 'stevearc/dressing.nvim'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'MunifTanjim/nui.nvim'
+Plug 'MeanderingProgrammer/render-markdown.nvim'
 
+Plug 'yetone/avante.nvim', { 'branch': 'main', 'do': 'make' }
 
-" Initialize plugin system
+" Optional deps
+Plug 'nvim-tree/nvim-web-devicons'
+Plug 'echasnovski/mini.icons'
+" Plug 'HakonHarnes/img-clip.nvim'
+" Plug 'zbirenbaum/copilot.lua'
+" Plug 'MeanderingProgrammer/render-markdown.nvim'
+
+" Yay, pass source=true if you want to build from source
+" Plug 'yetone/avante.nvim', { 'branch': 'main', 'do': 'make' }
+
 call plug#end()
 
 " ------End of Plugins-----
